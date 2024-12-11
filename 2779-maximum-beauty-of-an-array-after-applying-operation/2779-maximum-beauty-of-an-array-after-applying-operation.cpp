@@ -2,33 +2,20 @@ class Solution {
 public:
     int maximumBeauty(vector<int>& nums, int k) {
         sort(nums.begin(), nums.end());
+        int right = 0;  // Pointer for the end of the valid range
         int maxBeauty = 0;
 
-        for (int i = 0; i < nums.size(); i++) {
-            // Find the farthest index where the value is within the range
-            // [nums[i], nums[i] + 2*k]
-            int upperBound = findUpperBound(nums, nums[i] + 2 * k);
+        // Iterate through the array with the left pointer
+        for (int left = 0; left < nums.size(); left++) {
+            // Expand the right pointer while the range condition is met
+            while (right < nums.size() && nums[right] - nums[left] <= 2 * k) {
+                right++;
+            }
             // Update the maximum beauty based on the current range
-            maxBeauty = max(maxBeauty, upperBound - i + 1);
+            // We do not add 1 here as right is already pointing to one position
+            // beyond the valid range.
+            maxBeauty = max(maxBeauty, right - left);
         }
         return maxBeauty;
-    }
-
-private:
-    // Helper function to find the largest index where arr[index] <= val
-    int findUpperBound(vector<int>& arr, int val) {
-        int low = 0, high = arr.size() - 1, result = 0;
-
-        // Perform binary search to find the upper bound
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            if (arr[mid] <= val) {
-                result = mid;  // Update the result and move to the right half
-                low = mid + 1;
-            } else {
-                high = mid - 1;  // Move to the left half
-            }
-        }
-        return result;
     }
 };
